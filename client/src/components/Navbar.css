@@ -1,0 +1,41 @@
+nav {
+    width: 100%;
+    background-color: #2874f0;
+    padding-bottom: 8px;
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    z-index: 2;    
+}
+
+.f-1 {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px;
+}
+
+.f-1-ch1 {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+
+.f-1-ch2 {
+    display: flex;
+    align-items: center;
+    gap: .8em;
+}
+
+.f-1-ch2>div {
+    display: flex;
+    align-items: center;
+    gap: .2rem;
+}
+
+.f-1-ch2>div>span {
+    font-size: 0.8rem;
+}
