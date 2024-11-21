@@ -42,7 +42,7 @@ const Otp = () => {
 
   const handleOtpSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/verify-otp", {
+      const response = await fetch("https://flipbazar-api.vercel.app/api/verify-otp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
