@@ -72,7 +72,7 @@ export default function Payment({ product }) {
       {/* Payment Method Images Section */}
       <div
         style={{
-          padding: "20px",
+          padding: "10px",
           display: "flex",
           justifyContent: "space-around",
           marginTop: "20px",
