@@ -75,7 +75,7 @@ export default function Payment({ product }) {
       >
         <img
           src="/thumb/visa.png"
-          alt="Visa"
+          alt="visa"
           style={{ width: "50px", height: "35px", cursor: "pointer" }}
         />
         <img
