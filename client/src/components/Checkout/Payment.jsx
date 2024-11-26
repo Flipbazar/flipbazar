@@ -79,18 +79,18 @@ export default function Payment({ product }) {
           style={{ width: "50px", height: "35px", cursor: "pointer" }}
         />
         <img
-          src="/thumb/Google.png"
-          alt="Google Pay"
-          style={{ width: "50px", height: "35px", cursor: "pointer" }}
-        />
-        <img
-          src="/thumb/phonepay.png"
-          alt="PhonePay"
+          src="/thumb/Maestro.png"
+          alt="Maestro "
           style={{ width: "50px", height: "35px", cursor: "pointer" }}
         />
         <img
           src="/thumb/rupay.png"
           alt="Rupay"
+          style={{ width: "50px", height: "35px", cursor: "pointer" }}
+        />
+        <img
+          src="/thumb/master.png"
+          alt="master"
           style={{ width: "50px", height: "35px", cursor: "pointer" }}
         />
       </div>
