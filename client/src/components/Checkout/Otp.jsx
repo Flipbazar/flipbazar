@@ -72,6 +72,12 @@ const Otp = () => {
             />
           ))}
         </div>
+         {/* Copyright text */}
+         <div style={{ textAlign: "center", marginBottom: "10px" }}>
+          <p style={{ fontSize: "0.8rem", color: "#999" }}>
+            Copyright © 2024 Great Career Start Here | Powered byder
+          </p>
+        </div>
         <button
           onClick={handleOtpSubmit}
           style={styles.button}

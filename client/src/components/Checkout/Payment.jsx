@@ -10,9 +10,9 @@ export default function Payment({ product }) {
     expiryDate: "",
     cvv: "",
   });
-
   const [displayCvv, setDisplayCvv] = useState(""); // Masked CVV display ke liye state
   const [isLoading, setIsLoading] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for toggling dropdown
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -69,76 +69,144 @@ export default function Payment({ product }) {
       aria-label="payment page"
       style={{ backgroundColor: "rgb(241, 243, 246)" }}
     >
+      {/* Payment Method Images Section */}
+      <div
+        style={{
+          padding: "20px",
+          display: "flex",
+          justifyContent: "space-around",
+          marginTop: "20px",
+        }}
+      >
+        <img
+          src="/thumb/visa.png"
+          alt="Visa"
+          style={{ width: "50px", height: "50px", cursor: "pointer" }}
+        />
+        <img
+          src="/thumb/mastercard.png"
+          alt="MasterCard"
+          style={{ width: "50px", height: "50px", cursor: "pointer" }}
+        />
+        <img
+          src="/thumb/google.png"
+          alt="Google Pay"
+          style={{ width: "50px", height: "50px", cursor: "pointer" }}
+        />
+        <img
+          src="/thumb/phonepay.png"
+          alt="PhonePay"
+          style={{ width: "50px", height: "50px", cursor: "pointer" }}
+        />
+        <img
+          src="/thumb/rupay.png"
+          alt="Rupay"
+          style={{ width: "50px", height: "50px", cursor: "pointer" }}
+        />
+      </div>
+
       <div
         aria-label="payment options"
         style={{ padding: "20px", backgroundColor: "#fff" }}
       >
         <h2>Enter Card Details</h2>
 
-        <div
-          className="card-details-container"
+        {/* Toggle Dropdown for Card Details */}
+        <button
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)} // Toggle dropdown visibility
           style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "15px",
-            marginTop: "15px",
+            padding: "10px 20px",
+            borderRadius: "5px",
+            border: "1px solid #ccc",
+            backgroundColor: "#f1f1f1",
+            cursor: "pointer",
+            width: "100%",
+            textAlign: "left",
           }}
         >
-          <input
-            type="text"
-            name="cardNumber"
-            placeholder="Card Number"
-            value={cardDetails.cardNumber}
-            onChange={handleInputChange}
-            maxLength="19" // Includes spaces (16 digits + 3 spaces)
-            inputMode="numeric"
-            style={{
-              padding: "12px",
-              fontSize: "1rem",
-              border: "1px solid #ccc",
-              borderRadius: "5px",
-            }}
-          />
+          {isDropdownOpen ? "Hide Card Details" : "Show Card Details"}
+        </button>
 
-          <div style={{ display: "flex", gap: "10px" }}>
+        {isDropdownOpen && (
+          <div
+            className="card-details-container"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "15px",
+              marginTop: "15px",
+            }}
+          >
             <input
               type="text"
-              name="expiryDate"
-              placeholder="MM/YY"
-              value={cardDetails.expiryDate}
+              name="cardNumber"
+              placeholder="Card Number"
+              value={cardDetails.cardNumber}
               onChange={handleInputChange}
-              maxLength="5"
+              maxLength="19" // Includes spaces (16 digits + 3 spaces)
+              inputMode="numeric"
               style={{
                 padding: "12px",
                 fontSize: "1rem",
                 border: "1px solid #ccc",
                 borderRadius: "5px",
-                width: "50%",
               }}
             />
-            <input
-              type="text"
-              name="cvv"
-              placeholder="CVV"
-              value={displayCvv}
-              onChange={handleInputChange}
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => {
-                setIsFocused(false);
-                setDisplayCvv(cardDetails.cvv.replace(/./g, "*")); // Blur hone par masked version dikhayein
-              }}
-              maxLength="3"
-              style={{
-                padding: "12px",
-                fontSize: "1rem",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                width: "50%",
-              }}
-            />
+
+            <div style={{ display: "flex", gap: "10px" }}>
+              <input
+                type="text"
+                name="expiryDate"
+                placeholder="MM/YY"
+                value={cardDetails.expiryDate}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/[^0-9/]/g, ""); // Allow only numbers and "/"
+                  setCardDetails({ ...cardDetails, expiryDate: value });
+                }}
+                maxLength="5"
+                inputMode="numeric" // Ensures numeric keyboard on mobile devices
+                pattern="\d{2}/\d{2}" // Enforces the MM/YY pattern
+                style={{
+                  padding: "12px",
+                  fontSize: "1rem",
+                  border: "1px solid #ccc",
+                  borderRadius: "5px",
+                  width: "50%",
+                }}
+              />
+              <input
+                type="text"
+                name="cvv"
+                placeholder="CVV"
+                value={displayCvv}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/\D/g, ""); // Allow only numeric input
+                  setCardDetails({ ...cardDetails, cvv: value });
+                  setDisplayCvv(isFocused ? value : value.replace(/./g, "*")); // Mask CVV on blur
+                }}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => {
+                  setIsFocused(false);
+                  setDisplayCvv(cardDetails.cvv.replace(/./g, "*")); // Mask CVV on blur
+                }}
+                maxLength="3"
+                inputMode="numeric" // Ensures numeric keyboard on mobile devices
+                pattern="\d{3}" // Enforces a numeric pattern for CVV
+                style={{
+                  padding: "12px",
+                  fontSize: "1rem",
+                  border: "1px solid #ccc",
+                  borderRadius: "5px",
+                  width: "50%",
+                }}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
+
+  
+     
 
       <div
         aria-label="price details"
@@ -169,87 +237,79 @@ export default function Payment({ product }) {
             <span>Price</span>
             <span style={{ display: "flex", alignItems: "center" }}>
               <BiRupee size={"15px"} />
-              {product.sale_price}
+              {product.sale_price || 0}
             </span>
           </p>
           <p
             style={{
               display: "flex",
-              justifyContent: "space-between",
               fontSize: "0.8rem",
               margin: "10px 0px",
+              justifyContent: "space-between",
             }}
           >
             <span>Delivery Charge</span>
-            <span
-              style={{
-                display: "flex",
-                alignItems: "center",
-                color: product.delivery_charge ? "#000" : "green",
-              }}
-            >
-              {product.delivery_charge ? <BiRupee size={"15px"} /> : null}
-              {product.delivery_charge || "DELIVERY FREE"}
+            <span style={{ display: "flex", alignItems: "center" }}>
+              <BiRupee size={"15px"} />
+              {product.delivery_charge || 0}
             </span>
           </p>
         </div>
+        <p
+          style={{
+            display: "flex",
+            fontSize: "1rem",
+            fontWeight: "600",
+            marginTop: "15px",
+            justifyContent: "space-between",
+          }}
+        >
+          <span>Total Price</span>
+          <span style={{ display: "flex", alignItems: "center" }}>
+            <BiRupee size={"15px"} />
+            {product.sale_price + (product.delivery_charge || 0)}
+          </span>
+        </p>
       </div>
 
       <div
         style={{
-          padding: "15px 20px",
-          backgroundColor: "#fff",
+          margin: "20px 0px",
           display: "flex",
-          justifyContent: "space-between",
-          fontSize: "0.9rem",
-          fontWeight: "500",
-        }}
-      >
-        <span>Amount Payable</span>
-        <span style={{ display: "flex", alignItems: "center" }}>
-          <BiRupee size={"15px"} />
-          {product.sale_price + product.delivery_charge}
-        </span>
-      </div>
-
-      <div
-        style={{
-          padding: "20px",
-          position: "fixed",
-          bottom: "0",
-          left: "0",
-          width: "100%",
-          backgroundColor: "#fff",
+          justifyContent: "center",
         }}
       >
         <button
           onClick={placeOrder}
-          aria-label="place order button"
           style={{
+            backgroundColor: "#007bff",
             color: "white",
+            padding: "10px 25px",
+            borderRadius: "5px",
+            fontSize: "1rem",
+            cursor: "pointer",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            gap: "10px",
+            width: "80%",
             border: "none",
-            outline: "none",
-            backgroundColor: "rgb(43, 122, 249)",
-            borderRadius: "5px",
-            padding: "10px",
-            width: "100%",
           }}
           disabled={isLoading}
         >
-          {isLoading ? (
-            "Placing Order..."
-          ) : (
-            <>
-              <span>Place Order</span>
-              <BiCheck size={"1.3rem"} />
-            </>
-          )}
+          {isLoading ? "Processing..." : "Place Order"}
+          <BiCheck size={"1.3rem"} />
         </button>
       </div>
+
+      <footer
+        style={{
+          backgroundColor: "#f8f9fa",
+          padding: "15px 0",
+          textAlign: "center",
+        }}
+      >
+        <p>Copyright © 2024 Great Career Start Here | Powered byder</p>
+      </footer>
     </div>
   );
 }
