@@ -67,7 +67,7 @@ export default function Payment({ product }) {
   return (
     <div
       aria-label="payment page"
-      style={{ backgroundColor: "rgb(241, 243, 246)" }}
+      
     >
       {/* Payment Method Images Section */}
       <div
